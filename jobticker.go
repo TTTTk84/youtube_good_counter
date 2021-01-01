@@ -26,6 +26,7 @@ func (j *jobTicker) run() {
 		select {
 		case msg := <-j.good.msg:
 			msg_array = append(msg_array, msg)
+			fmt.Println(msg_array)
 			//j.outputMessage(&msg_array)
 		case <-j.timer.C:
 			fmt.Println(time.Now(), "- time_ticker 発火")

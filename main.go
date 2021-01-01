@@ -1,8 +1,6 @@
 package main
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"fmt"
 	"log"
 	"net/http"
@@ -32,7 +30,7 @@ func main() {
 
 func (c *goodHandler) ServeHTTP (w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
-		pass := md5_hash(os.Getenv("API_PASS"))
+		pass := os.Getenv("API_PASS")
 
 		json := c.json_parse(r)
 		if pass == json["Pass"] {
@@ -43,16 +41,4 @@ func (c *goodHandler) ServeHTTP (w http.ResponseWriter, r *http.Request) {
 
 	}
 
-}
-
-// md5でハッシュ化する
-func md5_hash(pass string) string{
-	md5_pass := []byte(pass)
-
-	for i:=0; i<100; i++ {
-		temp := md5.Sum(md5_pass)
-		md5_pass = temp[:16]
-	}
-
-	return hex.EncodeToString(md5_pass)
 }

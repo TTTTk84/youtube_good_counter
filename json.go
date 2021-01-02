@@ -36,13 +36,14 @@ type discord struct {
 	Content string `json:"content"`
 }
 
-func (j *jobTicker) outputMessage(message_array *[]map[string]interface{}) {
+func (g *goodHandler) outputMessage() {
 	// 入れる文字列を作成
 	content := fmt.Sprintf("**%d月%d日のいいね数 :** %d\n",
-	time.Now().Month(), time.Now().Day(), len(*message_array))
-	for _, mes := range *message_array {
+	time.Now().Month(), time.Now().Day(), len(g.msg))
+	for _, mes := range g.msg {
 		content += fmt.Sprintf("いいねした動画 : **%s**   %s\n", mes["Title"], mes["Url"])
 	}
+	fmt.Println(content)
 
 
 	url := os.Getenv("DISCORD_WEBHOOK")
@@ -59,5 +60,5 @@ func (j *jobTicker) outputMessage(message_array *[]map[string]interface{}) {
 	_, err = client.Do(resp) // 送信
 	err_io(err)
 
-	*message_array = nil
+	g.msg = nil
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type goodHandler struct {
-		msg   chan map[string]interface{}
+		msg   []map[string]interface{}
 }
 
 
@@ -18,27 +18,35 @@ func main() {
 		log.Fatal("$PORT が設定されていません")
 	}
 
-	good := &goodHandler{msg: make(chan map[string]interface{}, 10),}
-	job	 := &jobTicker{good: good}
-	go job.run()
+	good := &goodHandler{}
 
 	http.Handle("/good", good)
+
+	http.HandleFunc("/post", func(rw http.ResponseWriter, r *http.Request) {
+		fmt.Println("OK")
+		if r.Method == "POST" {
+			fmt.Println("ok")
+			good.outputMessage()
+		}
+	})
+
 	if err := http.ListenAndServe(":" + port, nil); err != nil{
 		log.Fatal(err)
 	}
 }
 
-func (c *goodHandler) ServeHTTP (w http.ResponseWriter, r *http.Request) {
+// good
+func (g *goodHandler) ServeHTTP (w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		pass := os.Getenv("API_PASS")
 
-		json := c.json_parse(r)
+		json := g.json_parse(r)
 		if pass == json["Pass"] {
-			c.msg <- json
+			g.msg = append(g.msg, json)
+			fmt.Println(g.msg)
 		}else {
 			fmt.Println("passwordが間違っています: ", json["Pass"])
 		}
 
 	}
-
 }

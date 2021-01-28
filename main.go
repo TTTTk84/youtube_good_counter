@@ -41,7 +41,7 @@ func main() {
 	})
 
 	http.HandleFunc("/post", func(rw http.ResponseWriter, r *http.Request) {
-		//youtube_good_counter.OutputMessage()
+		youtube_good_counter.OutputMessage()
 	})
 
 	if err := http.ListenAndServe(":" + port, nil); err != nil{

@@ -22,5 +22,5 @@ func sqlConnect() (database *gorm.DB) {
 
 func Db_init() {
 	db := sqlConnect()
-	db.AutoMigrate(&Watchtable{})
+	db.AutoMigrate(&Watchtables{})
 }

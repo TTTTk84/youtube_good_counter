@@ -1,7 +1,12 @@
 package youtube_good_counter
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"net/http"
+	"os"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -12,62 +17,51 @@ type discord struct {
 }
 
 
-type Watchtable struct {
+type Watchtables struct {
 	gorm.Model
 	Title string
 	Url string
 	LikedAt string
 }
 
-// func OutputMessage(){
-// 	// 入れる文字列を作成
-// 	record := csv_read()
-// 	var watchlists []watchlist
-// 	for _, item := range record{
-// 		add := watchlist{title: item[0],url: item[1],likedAt: item[2]}
-// 		watchlists = append(watchlists, add)
-// 	}
+type Watchtable struct {
+	Title string
+	Url string
+	LikedAt string
+}
 
+func OutputMessage(){
+	db := sqlConnect()
+	defer db.Close()
 
-// 	content := fmt.Sprintf("**%d月%d日のいいね数 :** %d\n",
-// 	time.Now().Month(), time.Now().Day(), len(watchlists))
+	watchtables := []Watchtable{}
+	db.Find(&watchtables)
 
-// 	for _, item := range watchlists {
-// 		content += fmt.Sprintf("いいねした動画 : **%s**   %s\n", item.title,item.url)
-// 	}
+	content := fmt.Sprintf("**%d月%d日のいいね数 :** %d\n",
+	time.Now().Month(), time.Now().Day(), len(watchtables))
 
-// 	url := os.Getenv("DISCORD_WEBHOOK")
-// 	discord := &discord{}
-// 	discord.Content = content
+	for _, item := range watchtables {
+		content += fmt.Sprintf("いいねした動画 : **%s**   %s\n", item.Title,item.Url)
+	}
+	fmt.Println(content)
 
-// 	// discordへのリクエストを作成
-// 	req_json, _ := json.Marshal(discord)
-// 	resp, err := http.NewRequest("POST", url, bytes.NewReader(req_json))
-// 	err_io(err)
-// 	resp.Header.Set("Content-Type","application/json")
+	url := os.Getenv("DISCORD_WEBHOOK")
+	discord := &discord{}
+	discord.Content = content
 
-// 	client := new(http.Client)
-// 	_, err = client.Do(resp) // 送信
-// 	err_io(err)
+	// discordへのリクエストを作成
+	req_json, _ := json.Marshal(discord)
+	resp, err := http.NewRequest("POST", url, bytes.NewReader(req_json))
+	err_io(err)
+	resp.Header.Set("Content-Type","application/json")
 
-// 	// csvファイル空にする
-// 	file, err := os.OpenFile("watchlist.csv", os.O_RDWR|os.O_CREATE|os.O_TRUNC,0755)
-// 	if err != nil{
-// 		log.Fatal("file open err:", err)
-// 	}
-// 	defer file.Close()
+	client := new(http.Client)
+	_, err = client.Do(resp) // 送信
+	err_io(err)
 
-// 	writer := csv.NewWriter(file)
-// 	w := [][]string {}
-// 	writer.WriteAll(w)
-// 	writer.Flush()
+	db.Exec("DELETE FROM watchtables")
 
-// 	if err := writer.Error(); err != nil {
-// 		log.Fatal("flush err:", err)
-// 	}
-// 	fmt.Println("watchlist clean")
-
-// }
+}
 
 func CreateGoodColumn(json map[string]string) {
 	db := sqlConnect()
@@ -76,8 +70,8 @@ func CreateGoodColumn(json map[string]string) {
 	watchtable := &Watchtable{Title: json["Title"], Url: json["Url"], LikedAt: json["LikedAt"]}
 	err := db.Create(watchtable).Error
 	if err != nil {
-		fmt.Println("can't column err:", err)
+		fmt.Println("insert column err:", err)
 		return
 	}
-	fmt.Println(watchtable.Title, watchtable.Url, watchtable.LikedAt)
+	fmt.Println("add column:",watchtable.Title, watchtable.Url, watchtable.LikedAt)
 }

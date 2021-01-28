@@ -1,10 +1,9 @@
 package youtube_good_counter
 
 import (
-	"encoding/csv"
 	"fmt"
-	"log"
-	"os"
+
+	"github.com/jinzhu/gorm"
 )
 
 
@@ -13,10 +12,11 @@ type discord struct {
 }
 
 
-type watchlist struct {
-	title string
-	url string
-	likedAt string
+type Watchtable struct {
+	gorm.Model
+	Title string
+	Url string
+	LikedAt string
 }
 
 // func OutputMessage(){
@@ -70,19 +70,14 @@ type watchlist struct {
 // }
 
 func CreateGoodColumn(json map[string]string) {
-	file, err := os.OpenFile("watchlist.csv", os.O_APPEND|os.O_WRONLY, 0755)
-	if err != nil{
-		log.Fatal("file open err:", err)
-	}
-	defer file.Close()
+	db := sqlConnect()
+	defer db.Close()
 
-	writer := csv.NewWriter(file)
-	line := []string{json["Title"],json["Url"],json["LikedAt"]}
-	writer.Write(line)
-	writer.Flush()
-
-	if err := writer.Error(); err != nil {
-		log.Fatal("flush err:", err)
+	watchtable := &Watchtable{Title: json["Title"], Url: json["Url"], LikedAt: json["LikedAt"]}
+	err := db.Create(watchtable).Error
+	if err != nil {
+		fmt.Println("can't column err:", err)
+		return
 	}
-	fmt.Println("add record ",line)
+	fmt.Println(watchtable.Title, watchtable.Url, watchtable.LikedAt)
 }

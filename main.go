@@ -20,6 +20,7 @@ func env_load() {
 
 func main() {
 	env_load()
+	youtube_good_counter.Db_init()
 
 	port := os.Getenv("PORT")
 	if port == "" {

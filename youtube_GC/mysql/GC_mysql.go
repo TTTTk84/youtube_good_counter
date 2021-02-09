@@ -40,7 +40,7 @@ func (m *gcsqlRepository) Store(w *domain.Watchtable) (error) {
 	return nil
 }
 
-func (m *gcsqlRepository) DeleteAll(w *domain.Watchtable) (error) {
+func (m *gcsqlRepository) DeleteAll(domain.Watchtables) (error) {
 	stmt, err := m.Conn.Prepare(queryDeleteAllWT)
 	if err != nil {
 		return errors.New("err: failed delete all")

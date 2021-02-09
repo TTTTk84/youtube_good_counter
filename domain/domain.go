@@ -10,12 +10,12 @@ type Watchtables []Watchtable
 
 type GCsqlRepository interface {
 	Store(*Watchtable) error
-	DeleteAll(*Watchtable) error
+	DeleteAll(Watchtables) error
 	GetAll() (Watchtables, error)
 }
 
 type GCUsecase interface {
-	AddGC()
-	GCOnceday()
+	AddGC(*Watchtable) (error)
+	GCOnceday() (Watchtables, error)
 	GCOnceWeek()
 }

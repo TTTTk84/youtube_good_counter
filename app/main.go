@@ -24,7 +24,7 @@ func main() {
 	router := gin.Default()
 
 	GC_sqlRepo := mysql.NewGC_mysql(db.NewDB())
-	GC_usecase := usecase.NewGCUsecase(GC_sqlRepo)
+	GC_usecase := usecase.NewGC_Usecase(GC_sqlRepo)
 	http.NewGC_handler(router, GC_usecase)
 
 	router.Run(":8080")

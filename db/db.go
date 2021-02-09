@@ -37,5 +37,16 @@ func NewDB() *sql.DB {
 		panic(err)
 	}
 
+	cmd := `CREATE TABLE IF NOT EXISTS watchtables(
+						title STRING,
+						url		STRING,
+						likedAt STRING)`
+
+	_, err = DBConn.Exec(cmd)
+	if err != nil {
+		panic(err)
+	}
+
+
 	return DBConn
 }

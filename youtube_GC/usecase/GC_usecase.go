@@ -6,7 +6,7 @@ type gcUsecase struct {
 	gcsqlrepo domain.GCsqlRepository
 }
 
-func NewGCUsecase(gu domain.GCsqlRepository) domain.GCUsecase {
+func NewGC_Usecase(gu domain.GCsqlRepository) domain.GCUsecase {
 	return &gcUsecase{gu}
 }
 

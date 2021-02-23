@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 
@@ -37,10 +39,7 @@ func NewDB() *sql.DB {
 		panic(err)
 	}
 
-	cmd := `CREATE TABLE IF NOT EXISTS watchtables(
-						title STRING,
-						url		STRING,
-						likedAt STRING)`
+	cmd := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s.watchtables    (title TEXT, url TEXT, likedAt TEXT);`, db.DBName)
 
 	_, err = DBConn.Exec(cmd)
 	if err != nil {

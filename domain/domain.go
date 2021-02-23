@@ -1,5 +1,7 @@
 package domain
 
+import "net/http"
+
 type Watchtable struct {
 	Title string
 	Url		string
@@ -16,6 +18,6 @@ type GCsqlRepository interface {
 
 type GCUsecase interface {
 	AddGC(*Watchtable) (error)
-	GCOnceday() (Watchtables, error)
-	GCOnceWeek()
+	GetAll() (Watchtables, error)
+	JsonParse(*http.Request) (*Watchtable, error)
 }

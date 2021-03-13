@@ -1,12 +1,21 @@
 package main
 
-import "net/http"
+import (
+	"log"
+	"net/http"
 
-func good(writer http.ResponseWriter, request *http.Request){
+	"github.com/TTTTk84/youtube_good_counter/data"
+)
 
+func good(w http.ResponseWriter, r *http.Request){
+	wt := data.Watchtable{}
+	err := wt.CreateWatchTable(r)
+	if err != nil{
+		log.Fatal(err)
+	}
 }
 
 
-func post(writer http.ResponseWriter, request *http.Request){
+func post(w http.ResponseWriter, r *http.Request){
 
 }

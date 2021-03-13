@@ -17,5 +17,15 @@ func good(w http.ResponseWriter, r *http.Request){
 
 
 func post(w http.ResponseWriter, r *http.Request){
+	discord := data.Discord{}
+	err := discord.PostWebhook()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = data.DeleteAllWatchTables()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }

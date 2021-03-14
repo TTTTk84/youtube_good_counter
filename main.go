@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	env_load()
+	//env_load()
 	port := os.Getenv("PORT")
 	data.SqlConnect()
 

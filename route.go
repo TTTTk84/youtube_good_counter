@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -13,12 +14,15 @@ func good(w http.ResponseWriter, r *http.Request){
 	if err != nil{
 		log.Fatal(err)
 	}
+	fmt.Println(fmt.Sprintf("%s %s %s", wt.Title,wt.Url,wt.LikedAt))
 }
 
 
 func post(w http.ResponseWriter, r *http.Request){
+	var err error
 	discord := data.Discord{}
-	err := discord.PostWebhook()
+
+	err = discord.PostWebhook()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,5 +31,6 @@ func post(w http.ResponseWriter, r *http.Request){
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("DELETE ALL watchtables")
 
 }

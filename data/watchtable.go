@@ -7,9 +7,9 @@ import (
 )
 
 type Watchtable struct {
-	Title 	string
-	Url  	string
-	LikedAt	string
+	Title 	string	`json:"Title"`
+	Url  		string	`json:"Url"`
+	LikedAt	string	`json:"LikedAt"`
 }
 
 func (wt *Watchtable) CreateWatchTable(r *http.Request) (err error){
@@ -22,7 +22,7 @@ func (wt *Watchtable) CreateWatchTable(r *http.Request) (err error){
 		return err
 	}
 
-	statement := "insert into watchtables (Title, User, LikedAt) values ($1, $2, $3) Title, Url, LikedAt"
+	statement := "insert into watchtables (Title, Url, LikedAt) values ($1, $2, $3) returning Title, Url, LikedAt"
 	stmt, err := Db.Prepare(statement)
 	if err != nil {
 		return err

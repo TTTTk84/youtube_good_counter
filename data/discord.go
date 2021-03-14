@@ -10,7 +10,7 @@ import (
 )
 
 type Discord struct {
-	content string
+	Content string `json:"content"`
 }
 
 func (dis *Discord) PostWebhook() (err error){
@@ -27,8 +27,13 @@ func (dis *Discord) PostWebhook() (err error){
 	}
 
 	url := os.Getenv("DISCORD_WEBHOOK")
-	dis.content = content
-	req_json, _ := json.Marshal(dis)
+	dis.Content = content
+
+	req_json, err := json.Marshal(dis)
+	if err != nil{
+		return err
+	}
+
 	resp, err := http.NewRequest("POST", url, bytes.NewReader(req_json))
 	if err != nil{
 		return err
@@ -39,5 +44,5 @@ func (dis *Discord) PostWebhook() (err error){
 	client := new(http.Client)
 	_, err = client.Do(resp)
 
-	return
+	return err
 }

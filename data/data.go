@@ -21,3 +21,11 @@ func SqlConnect(){
 	}
 	return
 }
+
+
+func passCheck(pass string) (bool){
+	if pass != os.Getenv("API_PASS"){
+		return false
+	}
+	return true
+}

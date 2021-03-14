@@ -14,7 +14,7 @@ func good(w http.ResponseWriter, r *http.Request){
 	if err != nil{
 		log.Fatal(err)
 	}
-	fmt.Println(fmt.Sprintf("%s %s %s", wt.Title,wt.Url,wt.LikedAt))
+	fmt.Println(fmt.Sprintf("%s %s", wt.Title,wt.Url))
 }
 
 

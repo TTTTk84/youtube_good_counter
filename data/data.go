@@ -2,9 +2,12 @@ package data
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"strconv"
 
 	_ "github.com/lib/pq"
 )
@@ -23,9 +26,20 @@ func SqlConnect(){
 }
 
 
-func passCheck(pass string) (bool){
+func PassCheck(pass string) (bool){
 	if pass != os.Getenv("API_PASS"){
 		return false
 	}
 	return true
+}
+
+
+func JsonParse(r *http.Request, v interface{}) (error){
+	length, _ := strconv.Atoi(r.Header.Get("Content-Length"))
+	body := make([]byte, length)
+	length, _ = r.Body.Read(body)
+
+	err := json.Unmarshal(body[:length], &v)
+
+	return err
 }

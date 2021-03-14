@@ -1,11 +1,7 @@
 package data
 
 import (
-	"encoding/json"
-	"errors"
-	"fmt"
 	"net/http"
-	"strconv"
 )
 
 type Watchtable struct {
@@ -15,16 +11,6 @@ type Watchtable struct {
 }
 
 func (wt *Watchtable) CreateWatchTable(r *http.Request) (err error){
-	length, _ := strconv.Atoi(r.Header.Get("Content-Length"))
-	body := make([]byte, length)
-	length, _ = r.Body.Read(body)
-
-	json.Unmarshal(body[:length], &wt)
-	fmt.Println(wt)
-	if !passCheck(wt.Pass) {
-		return errors.New("api pass error")
-	}
-
 	statement := "insert into watchtables (Title, Url) values ($1, $2) returning Title, Url"
 	stmt, err := Db.Prepare(statement)
 	if err != nil {

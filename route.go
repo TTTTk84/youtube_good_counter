@@ -10,7 +10,17 @@ import (
 
 func good(w http.ResponseWriter, r *http.Request){
 	wt := data.Watchtable{}
-	err := wt.CreateWatchTable(r)
+
+	err := data.JsonParse(r, &wt)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if !data.PassCheck(wt.Pass) {
+		log.Fatal(err)
+	}
+
+	err = wt.CreateWatchTable(r)
 	if err != nil{
 		log.Fatal(err)
 	}
@@ -19,8 +29,17 @@ func good(w http.ResponseWriter, r *http.Request){
 
 
 func post(w http.ResponseWriter, r *http.Request){
-	var err error
 	discord := data.Discord{}
+	var pass map[string]string
+
+	err := data.JsonParse(r, &pass)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if !data.PassCheck(pass["Pass"]) {
+		log.Fatal(err)
+	}
 
 	err = discord.PostWebhook()
 	if err != nil {

@@ -1,0 +1,2 @@
+# youtube_good_counter
+youtubeのいいね数を、一日一回discordに通知する
